@@ -23,7 +23,7 @@ This repository addresses the problem by:
 - Using official root filesystem archives (**rootfs tar.xz**) directly from Canonical (`cloud-images.ubuntu.com`).
 - Building and validating clean Docker images for each exact Ubuntu LTS point release.
 - Automatically validating `/etc/os-release` against the expected version tag before publishing.
-- Automatically publishing ready-to-use Docker images to Docker Hub: **`runalsh/ubuntu-docker-patch`**.
+- Automatically publishing ready-to-use Docker images to Docker Hub: **`runalsh/ubuntu-patch`**.
 
 ---
 
@@ -33,28 +33,28 @@ This repository addresses the problem by:
 
 | Tag | Version in `/etc/os-release` | Canonical Base Release |
 |---|---|---|
-| `runalsh/ubuntu-docker-patch:22.04` | `22.04 LTS` | `release-20220420` |
-| `runalsh/ubuntu-docker-patch:22.04.1` | `22.04.1 LTS` | `release-20220810` |
-| `runalsh/ubuntu-docker-patch:22.04.2` | `22.04.2 LTS` | `release-20230302` |
-| `runalsh/ubuntu-docker-patch:22.04.3` | `22.04.3 LTS` | `release-20230814` |
-| `runalsh/ubuntu-docker-patch:22.04.4` | `22.04.4 LTS` | `release-20240223` |
-| `runalsh/ubuntu-docker-patch:22.04.5` | `22.04.5 LTS` | `release-20240912` |
+| `runalsh/ubuntu-patch:22.04` | `22.04 LTS` | `release-20220420` |
+| `runalsh/ubuntu-patch:22.04.1` | `22.04.1 LTS` | `release-20220810` |
+| `runalsh/ubuntu-patch:22.04.2` | `22.04.2 LTS` | `release-20230302` |
+| `runalsh/ubuntu-patch:22.04.3` | `22.04.3 LTS` | `release-20230814` |
+| `runalsh/ubuntu-patch:22.04.4` | `22.04.4 LTS` | `release-20240223` |
+| `runalsh/ubuntu-patch:22.04.5` | `22.04.5 LTS` | `release-20240912` |
 
 ### Ubuntu 24.04 LTS (Noble Numbat)
 
 | Tag | Version in `/etc/os-release` | Canonical Base Release |
 |---|---|---|
-| `runalsh/ubuntu-docker-patch:24.04` | `24.04 LTS` | `release-20240423` |
-| `runalsh/ubuntu-docker-patch:24.04.1` | `24.04.1 LTS` | `release-20240911` |
-| `runalsh/ubuntu-docker-patch:24.04.2` | `24.04.2 LTS` | `release-20250221` |
-| `runalsh/ubuntu-docker-patch:24.04.3` | `24.04.3 LTS` | `release-20250805` |
-| `runalsh/ubuntu-docker-patch:24.04.4` | `24.04.4 LTS` | `release-20260225` |
+| `runalsh/ubuntu-patch:24.04` | `24.04 LTS` | `release-20240423` |
+| `runalsh/ubuntu-patch:24.04.1` | `24.04.1 LTS` | `release-20240911` |
+| `runalsh/ubuntu-patch:24.04.2` | `24.04.2 LTS` | `release-20250221` |
+| `runalsh/ubuntu-patch:24.04.3` | `24.04.3 LTS` | `release-20250805` |
+| `runalsh/ubuntu-patch:24.04.4` | `24.04.4 LTS` | `release-20260225` |
 
 ### Ubuntu 26.04 LTS (Resilient Reptile)
 
 | Tag | Version in `/etc/os-release` | Canonical Base Release |
 |---|---|---|
-| `runalsh/ubuntu-docker-patch:26.04` | `26.04 LTS` | `release-20260421` |
+| `runalsh/ubuntu-patch:26.04` | `26.04 LTS` | `release-20260421` |
 
 ---
 
@@ -63,9 +63,9 @@ This repository addresses the problem by:
 ### Using pre-built images from Docker Hub
 
 ```bash
-docker run --rm -it runalsh/ubuntu-docker-patch:22.04.1 cat /etc/os-release
-docker run --rm -it runalsh/ubuntu-docker-patch:24.04.2 cat /etc/os-release
-docker run --rm -it runalsh/ubuntu-docker-patch:26.04 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:22.04.1 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:24.04.2 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:26.04 cat /etc/os-release
 ```
 
 ### Local Build
@@ -97,5 +97,5 @@ TEST_VERSION=true PUSH_TO_DOCKERHUB=false ./build.sh
 ## 🔐 GitHub Actions Secrets
 
 The CI workflow requires the following secrets in GitHub Secrets:
-- `DOCKERHUB_USERNAME`: Your Docker Hub username ('username')
+- `DOCKERHUB_USERNAME`: Your Docker Hub username (`runalsh`)
 - `DOCKERHUB_TOKEN`: Docker Hub Personal Access Token

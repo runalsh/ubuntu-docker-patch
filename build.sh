@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-IMAGE_NAME="runalsh/ubuntu-docker-patch"
+IMAGE_NAME="runalsh/ubuntu-patch"
 RELEASES_FILE="releases.txt"
 
 if [ ! -f "$RELEASES_FILE" ]; then
