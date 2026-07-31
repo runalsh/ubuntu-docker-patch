@@ -97,5 +97,5 @@ TEST_VERSION=true PUSH_TO_DOCKERHUB=false ./build.sh
 ## 🔐 GitHub Actions Secrets
 
 The CI workflow requires the following secrets in GitHub Secrets:
-- `DOCKERHUB_USERNAME`: Your Docker Hub username ()
+- `DOCKERHUB_USERNAME`: Your Docker Hub username ('username')
 - `DOCKERHUB_TOKEN`: Docker Hub Personal Access Token
