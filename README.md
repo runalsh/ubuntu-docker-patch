@@ -1,37 +1,37 @@
 # Ubuntu Docker Patch Images
 
-Автоматизированная сборка Docker-образов с точной фиксированной патч-версией (point release) Ubuntu (**22.04.0** .. **22.04.5**, **24.04.0** .. **24.04.4**).
+Automated build of Docker images for exact Ubuntu point releases (**22.04.0** .. **22.04.5**, **24.04.0** .. **24.04.4**).
 
 ---
 
-## ❓ Какую проблему решает проект
+## ❓ Problem Statement
 
-В официальном Docker Hub реестре (`library/ubuntu`) публикуются **только мажорные теги** (например, `ubuntu:22.04`, `ubuntu:24.04`, `jammy`, `noble`).
+The official Docker Hub registry (`library/ubuntu`) publishes **only major tags** (e.g., `ubuntu:22.04`, `ubuntu:24.04`, `jammy`, `noble`).
 
-Официальных тегов вида `ubuntu:22.04.1`, `ubuntu:22.04.5` или `ubuntu:24.04.2` **не существует**, так как мейнтейнеры регулярно обновляют существующие теги до самых свежих пакетов.
+Official tags like `ubuntu:22.04.1`, `ubuntu:22.04.5`, or `ubuntu:24.04.2` **do not exist**, as maintainers continuously update major tags with the latest packages.
 
-### Проблемы:
-1. **Тестирование на конкретных версиях дистрибутивов**: Нельзя запустить тесты или симулировать окружение, зафиксированное на конкретном минорном релизе (например, `22.04.1` или `24.04.2`).
-2. **Воспроизводимость сборок**: Образ `ubuntu:22.04` со временем меняется из-за обновления пакетов в базовом образе Docker, что может маскировать или изменять поведение тестируемого ПО.
-3. **Аудит безопасности и форензика**: Сложно воспроизвести окружение системы на момент выхода конкретного релиза.
-
----
-
-## 🚀 Решение
-
-Данный репозиторий решает эту проблему следующим образом:
-- Использует официальные архивы корневой файловой системы (**rootfs tar.xz**) напрямую от Canonical (`cloud-images.ubuntu.com`).
-- Формирует и валидирует чистые Docker-образы для каждой точной минорной версии Ubuntu LTS.
-- Автоматически проверяет соответствие `/etc/os-release` запрашиваемому тегу перед публикацией.
-- Автоматически публицирует готовые Docker-образы в Docker Hub: **`runalsh/ubuntu-docker-patch`**.
+### Key Issues:
+1. **Testing on specific distribution patch versions**: Impossibility of running tests or simulating environments locked to a specific point release (e.g., `22.04.1` or `24.04.2`).
+2. **Build Reproducibility**: The base `ubuntu:22.04` image changes over time as packages are updated, which can mask or alter software behavior.
+3. **Security Audits & Forensics**: Difficulty in reproducing system environments as they existed at a specific point release date.
 
 ---
 
-## 📦 Доступные образы и теги
+## 🚀 Solution
+
+This repository addresses the problem by:
+- Using official root filesystem archives (**rootfs tar.xz**) directly from Canonical (`cloud-images.ubuntu.com`).
+- Building and validating clean Docker images for each exact Ubuntu LTS point release.
+- Automatically validating `/etc/os-release` against the expected version tag before publishing.
+- Automatically publishing ready-to-use Docker images to Docker Hub: **`runalsh/ubuntu-docker-patch`**.
+
+---
+
+## 📦 Available Images and Tags
 
 ### Ubuntu 22.04 LTS (Jammy Jellyfish)
 
-| Тег | Версия в `/etc/os-release` | Базовый релиз Canonical |
+| Tag | Version in `/etc/os-release` | Canonical Base Release |
 |---|---|---|
 | `runalsh/ubuntu-docker-patch:22.04.0` | `22.04 LTS` | `release-20220420` |
 | `runalsh/ubuntu-docker-patch:22.04.1` | `22.04.1 LTS` | `release-20220810` |
@@ -42,7 +42,7 @@
 
 ### Ubuntu 24.04 LTS (Noble Numbat)
 
-| Тег | Версия в `/etc/os-release` | Базовый релиз Canonical |
+| Tag | Version in `/etc/os-release` | Canonical Base Release |
 |---|---|---|
 | `runalsh/ubuntu-docker-patch:24.04.0` | `24.04 LTS` | `release-20240423` |
 | `runalsh/ubuntu-docker-patch:24.04.1` | `24.04.1 LTS` | `release-20240911` |
@@ -52,20 +52,20 @@
 
 ---
 
-## 🛠 Быстрый старт
+## 🛠 Quick Start
 
-### Использование готового образа из Docker Hub
+### Using pre-built images from Docker Hub
 
 ```bash
 docker run --rm -it runalsh/ubuntu-docker-patch:22.04.1 cat /etc/os-release
 docker run --rm -it runalsh/ubuntu-docker-patch:24.04.2 cat /etc/os-release
 ```
 
-### Локальная сборка
+### Local Build
 
-Файл `releases.txt` содержит список версий и их прямые ссылки на rootfs.
+The `releases.txt` file contains a list of tags and direct download URLs for rootfs archives.
 
-Для импорта всех версий локально:
+To import all versions locally:
 
 ```bash
 chmod +x build.sh
@@ -74,21 +74,21 @@ TEST_VERSION=true PUSH_TO_DOCKERHUB=false ./build.sh
 
 ---
 
-## ⚙️ Структура репозитория
+## ⚙️ Repository Structure
 
 ```text
 .
 ├── .github/workflows/
-│   └── build-and-push.yml  # Автоматический CI pipeline для сборки, тестирования и push в Docker Hub
-├── build.sh                 # Скрипт автоматического импорта и проверки версий
-├── releases.txt             # Реестр URL с версиями rootfs
-└── README.md                # Документация проекта
+│   └── build-and-push.yml  # Automated CI pipeline for building, testing, and pushing to Docker Hub
+├── build.sh                 # Script for automatic import and version verification
+├── releases.txt             # Registry of URLs with rootfs versions
+└── README.md                # Project documentation
 ```
 
 ---
 
-## 🔐 Секреты для GitHub Actions
+## 🔐 GitHub Actions Secrets
 
-Для работы CI workflow требуются секреты в GitHub Secrets:
-- `DOCKERHUB_USERNAME`: Логин на Docker Hub (`runalsh`)
-- `DOCKERHUB_TOKEN`: Personal Access Token Docker Hub
+The CI workflow requires the following secrets in GitHub Secrets:
+- `DOCKERHUB_USERNAME`: Your Docker Hub username (`runalsh`)
+- `DOCKERHUB_TOKEN`: Docker Hub Personal Access Token
