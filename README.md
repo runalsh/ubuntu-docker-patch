@@ -23,6 +23,7 @@ This repository addresses the problem by:
 - Using official root filesystem archives (**rootfs tar.xz**) directly from Canonical (`cloud-images.ubuntu.com`).
 - Building and validating clean Docker images for each exact Ubuntu LTS point release.
 - Automatically validating `/etc/os-release` against the expected version tag before publishing.
+- Generating SPDX SBOM files and scanning for vulnerabilities using **Trivy** without blocking the pipeline.
 - Automatically publishing ready-to-use Docker images to Docker Hub: **`runalsh/ubuntu-patch`**.
 
 ---
@@ -91,6 +92,15 @@ The `build.sh` script supports the following configuration environment variables
 | `PUSH_TO_DOCKERHUB` | `false` | When set to `true`, automatically pushes built images to Docker Hub (`runalsh/ubuntu-patch:<tag>`). |
 | `CLEANUP_DOCKER_IMAGES` | `false` | When set to `true`, deletes the local Docker image (`docker rmi`) after build and push to conserve disk space. |
 | `SKIP_EXISTS_CHECK` | `false` | When set to `false`, checks if the image tag already exists on Docker Hub and skips download/build if present. Set to `true` to force building all tags regardless of Docker Hub status. |
+| `ENABLE_TRIVY_SCAN` | `false` | When set to `true` (or when `trivy` binary is present), generates SPDX SBOM reports (`trivy-reports/sbom-<tag>.json`) and logs vulnerabilities to stdout without failing the build pipeline (`--exit-code 0`). |
+
+---
+
+## 🛡 Security & Trivy Scanning
+
+During build execution, images are scanned using [Trivy](https://github.com/aquasecurity/trivy):
+- **SBOM Generation**: Exported in SPDX-JSON format (`trivy-reports/sbom-<tag>.json`) and saved to GitHub Actions Job Artifacts (`ubuntu-sbom-reports`).
+- **Vulnerability Logging**: Vulnerabilities (UNKNOWN, LOW, MEDIUM, HIGH, CRITICAL) are logged to build stdout. Scans execute with `--exit-code 0`, ensuring pipeline continuity regardless of identified CVEs.
 
 ---
 
@@ -99,8 +109,8 @@ The `build.sh` script supports the following configuration environment variables
 ```text
 .
 ├── .github/workflows/
-│   └── build-and-push.yml  # Automated CI pipeline for building, testing, and pushing to Docker Hub
-├── build.sh                 # Script for automatic import and version verification
+│   └── build-and-push.yml  # Automated CI pipeline for building, testing, scanning, and pushing to Docker Hub
+├── build.sh                 # Script for automatic import, Trivy scanning, and version verification
 ├── releases.txt             # Registry of URLs with rootfs versions
 └── README.md                # Project documentation
 ```

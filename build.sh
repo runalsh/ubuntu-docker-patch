@@ -9,6 +9,8 @@ if [ ! -f "$RELEASES_FILE" ]; then
     exit 1
 fi
 
+mkdir -p trivy-reports
+
 echo "Starting process for image repository: ${IMAGE_NAME}"
 
 while read -r tag url || [ -n "$tag" ]; do
@@ -60,14 +62,22 @@ while read -r tag url || [ -n "$tag" ]; do
         echo "3. Skipping version verification (TEST_VERSION is false)."
     fi
 
-    if [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
-        echo "4. Pushing image to Docker Hub..."
-        docker push "${FULL_IMAGE_TAG}"
-    else
-        echo "4. Skipping Docker Hub push (PUSH_TO_DOCKERHUB is not set to 'true')."
+    if command -v trivy &>/dev/null || [ "${ENABLE_TRIVY_SCAN:-false}" = "true" ]; then
+        echo "4. Generating SBOM and scanning vulnerabilities with Trivy..."
+        trivy image --format spdx-json --output "trivy-reports/sbom-${tag}.json" "${FULL_IMAGE_TAG}" 2>/dev/null || true
+        echo "--- Trivy Vulnerability Report for ${FULL_IMAGE_TAG} ---"
+        trivy image --exit-code 0 --severity UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL "${FULL_IMAGE_TAG}" || true
+        echo "--------------------------------------------------------"
     fi
 
-    echo "5. Cleaning up local tarball..."
+    if [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
+        echo "5. Pushing image to Docker Hub..."
+        docker push "${FULL_IMAGE_TAG}"
+    else
+        echo "5. Skipping Docker Hub push (PUSH_TO_DOCKERHUB is not set to 'true')."
+    fi
+
+    echo "6. Cleaning up local tarball..."
     rm -f "${TAR_FILE}"
 
     if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
