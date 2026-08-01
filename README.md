@@ -81,6 +81,19 @@ TEST_VERSION=true PUSH_TO_DOCKERHUB=false ./build.sh
 
 ---
 
+## 🔧 Environment Variables
+
+The `build.sh` script supports the following configuration environment variables:
+
+| Variable | Default | Description |
+|---|---|---|
+| `TEST_VERSION` | `true` | When set to `true`, verifies container functionality and validates `/etc/os-release` after import. |
+| `PUSH_TO_DOCKERHUB` | `false` | When set to `true`, automatically pushes built images to Docker Hub (`runalsh/ubuntu-patch:<tag>`). |
+| `CLEANUP_DOCKER_IMAGES` | `false` | When set to `true`, deletes the local Docker image (`docker rmi`) after build and push to conserve disk space. |
+| `SKIP_EXISTS_CHECK` | `false` | When set to `false`, checks if the image tag already exists on Docker Hub and skips download/build if present. Set to `true` to force building all tags regardless of Docker Hub status. |
+
+---
+
 ## ⚙️ Repository Structure
 
 ```text
