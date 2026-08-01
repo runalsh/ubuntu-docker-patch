@@ -22,7 +22,7 @@ while read -r tag url || [ -n "$tag" ]; do
 
     FULL_IMAGE_TAG="${IMAGE_NAME}:${tag}"
 
-    if [ "${CHECK_DOCKERHUB_EXISTS:-true}" = "true" ]; then
+    if [ "${SKIP_EXISTS_CHECK:-false}" != "true" ]; then
         echo "Checking if ${FULL_IMAGE_TAG} already exists on Docker Hub..."
         if docker manifest inspect "${FULL_IMAGE_TAG}" &>/dev/null || curl -sfSL "https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/${tag}/" &>/dev/null; then
             echo "Tag ${FULL_IMAGE_TAG} already exists on Docker Hub. Skipping download and build!"
@@ -30,6 +30,8 @@ while read -r tag url || [ -n "$tag" ]; do
             continue
         fi
         echo "Tag ${FULL_IMAGE_TAG} not found on Docker Hub. Proceeding with build..."
+    else
+        echo "SKIP_EXISTS_CHECK is 'true'. Skipping Docker Hub check and forcing build for ${FULL_IMAGE_TAG}..."
     fi
 
     TAR_FILE="temp_rootfs_${tag}.tar.xz"
