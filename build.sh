@@ -20,12 +20,22 @@ while read -r tag url || [ -n "$tag" ]; do
     echo "URL: ${url}"
     echo "=========================================="
 
+    FULL_IMAGE_TAG="${IMAGE_NAME}:${tag}"
+
+    if [ "${CHECK_DOCKERHUB_EXISTS:-true}" = "true" ]; then
+        echo "Checking if ${FULL_IMAGE_TAG} already exists on Docker Hub..."
+        if docker manifest inspect "${FULL_IMAGE_TAG}" &>/dev/null || curl -sfSL "https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/${tag}/" &>/dev/null; then
+            echo "Tag ${FULL_IMAGE_TAG} already exists on Docker Hub. Skipping download and build!"
+            echo
+            continue
+        fi
+        echo "Tag ${FULL_IMAGE_TAG} not found on Docker Hub. Proceeding with build..."
+    fi
+
     TAR_FILE="temp_rootfs_${tag}.tar.xz"
 
     echo "1. Downloading rootfs..."
     curl -fSL -o "${TAR_FILE}" "${url}"
-
-    FULL_IMAGE_TAG="${IMAGE_NAME}:${tag}"
 
     echo "2. Importing rootfs into Docker as ${FULL_IMAGE_TAG}..."
     docker import "${TAR_FILE}" "${FULL_IMAGE_TAG}"
@@ -57,6 +67,11 @@ while read -r tag url || [ -n "$tag" ]; do
 
     echo "5. Cleaning up local tarball..."
     rm -f "${TAR_FILE}"
+
+    if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
+        echo "Removing local Docker image ${FULL_IMAGE_TAG} to save disk space..."
+        docker rmi -f "${FULL_IMAGE_TAG}" 2>/dev/null || true
+    fi
 
     echo "Successfully completed processing for tag ${tag}!"
     echo
