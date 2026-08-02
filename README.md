@@ -1,6 +1,6 @@
 # Ubuntu Docker Patch Images
 
-Automated build of Docker images for exact Ubuntu point releases (**22.04** .. **22.04.5**, **24.04** .. **24.04.4**, **26.04**).
+Automated build of Docker images for exact Ubuntu point releases (**22.04.0** .. **22.04.5**, **24.04.0** .. **24.04.4**, **26.04.0**).
 
 ---
 
@@ -34,7 +34,8 @@ This repository addresses the problem by:
 
 | Tag | OS Version | Docker Hub Image Link | GHCR Package Link |
 |---|---|---|---|
-| `22.04` | `22.04 LTS` | [`runalsh/ubuntu-patch:22.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04` | `Latest 22.04 LTS` | [`runalsh/ubuntu-patch:22.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04.0` | `22.04.0 LTS` | [`runalsh/ubuntu-patch:22.04.0`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.0`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `22.04.1` | `22.04.1 LTS` | [`runalsh/ubuntu-patch:22.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.1`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `22.04.2` | `22.04.2 LTS` | [`runalsh/ubuntu-patch:22.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.2`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `22.04.3` | `22.04.3 LTS` | [`runalsh/ubuntu-patch:22.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.3`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
@@ -45,7 +46,8 @@ This repository addresses the problem by:
 
 | Tag | OS Version | Docker Hub Image Link | GHCR Package Link |
 |---|---|---|---|
-| `24.04` | `24.04 LTS` | [`runalsh/ubuntu-patch:24.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `24.04` | `Latest 24.04 LTS` | [`runalsh/ubuntu-patch:24.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `24.04.0` | `24.04.0 LTS` | [`runalsh/ubuntu-patch:24.04.0`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.0`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `24.04.1` | `24.04.1 LTS` | [`runalsh/ubuntu-patch:24.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.1`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `24.04.2` | `24.04.2 LTS` | [`runalsh/ubuntu-patch:24.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.2`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `24.04.3` | `24.04.3 LTS` | [`runalsh/ubuntu-patch:24.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.3`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
@@ -55,7 +57,8 @@ This repository addresses the problem by:
 
 | Tag | OS Version | Docker Hub Image Link | GHCR Package Link |
 |---|---|---|---|
-| `26.04` | `26.04 LTS` | [`runalsh/ubuntu-patch:26.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `26.04` | `Latest 26.04 LTS` | [`runalsh/ubuntu-patch:26.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `26.04.0` | `26.04.0 LTS` | [`runalsh/ubuntu-patch:26.04.0`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04.0`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 
 ---
 
@@ -64,17 +67,19 @@ This repository addresses the problem by:
 ### Docker Hub
 
 ```bash
-docker run --rm -it runalsh/ubuntu-patch:22.04.1 cat /etc/os-release
-docker run --rm -it runalsh/ubuntu-patch:24.04.2 cat /etc/os-release
-docker run --rm -it runalsh/ubuntu-patch:26.04 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:22.04.0 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:22.04.5 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:24.04.0 cat /etc/os-release
+docker run --rm -it runalsh/ubuntu-patch:26.04.0 cat /etc/os-release
 ```
 
 ### GitHub Container Registry (GHCR)
 
 ```bash
-docker run --rm -it ghcr.io/runalsh/ubuntu-patch:22.04.1 cat /etc/os-release
-docker run --rm -it ghcr.io/runalsh/ubuntu-patch:24.04.2 cat /etc/os-release
-docker run --rm -it ghcr.io/runalsh/ubuntu-patch:26.04 cat /etc/os-release
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:22.04.0 cat /etc/os-release
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:22.04.5 cat /etc/os-release
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:24.04.0 cat /etc/os-release
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:26.04.0 cat /etc/os-release
 ```
 
 ### Local Build
@@ -118,10 +123,12 @@ During build execution, images are scanned using [Trivy](https://github.com/aqua
 ```text
 .
 ├── .github/workflows/
-│   └── build-and-push.yml  # Automated CI pipeline for building, testing, scanning, and pushing to Docker Hub & GHCR
-├── build.sh                 # Script for automatic import, Trivy scanning, and version verification
-├── releases.txt             # Registry of URLs with rootfs versions
-└── README.md                # Project documentation
+│   ├── build-and-push.yml        # Automated CI pipeline for building, testing, scanning, and pushing to Docker Hub & GHCR
+│   └── auto-discover-ubuntu.yml  # Weekly cron workflow for discovering new Ubuntu point releases and opening PRs
+├── build.sh                       # Script for automatic import, Trivy scanning, and version verification
+├── discover_new_releases.py       # Python scanner for checking Canonical for new point releases
+├── releases.txt                   # Registry of URLs with rootfs versions
+└── README.md                      # Project documentation
 ```
 
 ---
