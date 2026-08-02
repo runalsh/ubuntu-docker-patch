@@ -6,7 +6,7 @@ Automated build of Docker images for exact Ubuntu point releases (**22.04.0** ..
 
 ## ❓ Problem Statement
 
-The official Docker Hub registry (`library/ubuntu`) publishes **only major tags** (e.g., `ubuntu:22.04`, `ubuntu:24.04`, `ubuntu:26.04`, `jammy`, `noble`, `resilient`).
+The official Docker Hub registry (`library/ubuntu`) publishes **only major tags** (e.g., `ubuntu:22.04`, `ubuntu:24.04`, `jammy`, `noble`).
 
 Official tags like `ubuntu:22.04.1`, `ubuntu:22.04.5`, or `ubuntu:24.04.2` **do not exist**, as maintainers continuously update major tags with the latest packages.
 
@@ -20,7 +20,7 @@ Official tags like `ubuntu:22.04.1`, `ubuntu:22.04.5`, or `ubuntu:24.04.2` **do 
 ## 🚀 Solution
 
 This repository addresses the problem by:
-- Using official root filesystem archives (**rootfs tar.xz**) directly from Canonical (`cloud-images.ubuntu.com`).
+- Using official root filesystem archives (**rootfs tar.xz**) directly from Canonical (`cloud-images.ubuntu.com` and `cloud-images-archive.ubuntu.com`).
 - Building and validating clean Docker images for each exact Ubuntu LTS point release.
 - Automatically validating `/etc/os-release` against the expected version tag before publishing.
 - Generating SPDX SBOM files and scanning for vulnerabilities using **Trivy** without blocking the pipeline.
