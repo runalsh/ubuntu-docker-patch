@@ -24,49 +24,57 @@ This repository addresses the problem by:
 - Building and validating clean Docker images for each exact Ubuntu LTS point release.
 - Automatically validating `/etc/os-release` against the expected version tag before publishing.
 - Generating SPDX SBOM files and scanning for vulnerabilities using **Trivy** without blocking the pipeline.
-- Automatically publishing ready-to-use Docker images to Docker Hub: **`runalsh/ubuntu-patch`**.
+- Automatically publishing ready-to-use Docker images to **Docker Hub** (`runalsh/ubuntu-patch`) and **GitHub Container Registry** (`ghcr.io/runalsh/ubuntu-patch`).
 
 ---
 
-## 📦 Available Images and Tags
+## 📦 Available Images and Registries
 
 ### Ubuntu 22.04 LTS (Jammy Jellyfish)
 
-| Tag | Version in `/etc/os-release` | Canonical Base Release |
-|---|---|---|
-| `runalsh/ubuntu-patch:22.04` | `22.04 LTS` | `release-20220420` |
-| `runalsh/ubuntu-patch:22.04.1` | `22.04.1 LTS` | `release-20220810` |
-| `runalsh/ubuntu-patch:22.04.2` | `22.04.2 LTS` | `release-20230302` |
-| `runalsh/ubuntu-patch:22.04.3` | `22.04.3 LTS` | `release-20230814` |
-| `runalsh/ubuntu-patch:22.04.4` | `22.04.4 LTS` | `release-20240223` |
-| `runalsh/ubuntu-patch:22.04.5` | `22.04.5 LTS` | `release-20240912` |
+| Tag | OS Version | Docker Hub Image Link | GHCR Image Link |
+|---|---|---|---|
+| `22.04` | `22.04 LTS` | [`runalsh/ubuntu-patch:22.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `22.04.1` | `22.04.1 LTS` | [`runalsh/ubuntu-patch:22.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.1`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `22.04.2` | `22.04.2 LTS` | [`runalsh/ubuntu-patch:22.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.2`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `22.04.3` | `22.04.3 LTS` | [`runalsh/ubuntu-patch:22.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.3`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `22.04.4` | `22.04.4 LTS` | [`runalsh/ubuntu-patch:22.04.4`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.4`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `22.04.5` | `22.04.5 LTS` | [`runalsh/ubuntu-patch:22.04.5`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.5`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
 
 ### Ubuntu 24.04 LTS (Noble Numbat)
 
-| Tag | Version in `/etc/os-release` | Canonical Base Release |
-|---|---|---|
-| `runalsh/ubuntu-patch:24.04` | `24.04 LTS` | `release-20240423` |
-| `runalsh/ubuntu-patch:24.04.1` | `24.04.1 LTS` | `release-20240911` |
-| `runalsh/ubuntu-patch:24.04.2` | `24.04.2 LTS` | `release-20250221` |
-| `runalsh/ubuntu-patch:24.04.3` | `24.04.3 LTS` | `release-20250805` |
-| `runalsh/ubuntu-patch:24.04.4` | `24.04.4 LTS` | `release-20260225` |
+| Tag | OS Version | Docker Hub Image Link | GHCR Image Link |
+|---|---|---|---|
+| `24.04` | `24.04 LTS` | [`runalsh/ubuntu-patch:24.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `24.04.1` | `24.04.1 LTS` | [`runalsh/ubuntu-patch:24.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.1`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `24.04.2` | `24.04.2 LTS` | [`runalsh/ubuntu-patch:24.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.2`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `24.04.3` | `24.04.3 LTS` | [`runalsh/ubuntu-patch:24.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.3`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `24.04.4` | `24.04.4 LTS` | [`runalsh/ubuntu-patch:24.04.4`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.4`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
 
 ### Ubuntu 26.04 LTS (Resilient Reptile)
 
-| Tag | Version in `/etc/os-release` | Canonical Base Release |
-|---|---|---|
-| `runalsh/ubuntu-patch:26.04` | `26.04 LTS` | `release-20260421` |
+| Tag | OS Version | Docker Hub Image Link | GHCR Image Link |
+|---|---|---|---|
+| `26.04` | `26.04 LTS` | [`runalsh/ubuntu-patch:26.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
 
 ---
 
 ## 🛠 Quick Start
 
-### Using pre-built images from Docker Hub
+### Docker Hub
 
 ```bash
 docker run --rm -it runalsh/ubuntu-patch:22.04.1 cat /etc/os-release
 docker run --rm -it runalsh/ubuntu-patch:24.04.2 cat /etc/os-release
 docker run --rm -it runalsh/ubuntu-patch:26.04 cat /etc/os-release
+```
+
+### GitHub Container Registry (GHCR)
+
+```bash
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:22.04.1 cat /etc/os-release
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:24.04.2 cat /etc/os-release
+docker run --rm -it ghcr.io/runalsh/ubuntu-patch:26.04 cat /etc/os-release
 ```
 
 ### Local Build
@@ -77,7 +85,7 @@ To import all versions locally:
 
 ```bash
 chmod +x build.sh
-TEST_VERSION=true PUSH_TO_DOCKERHUB=false ./build.sh
+TEST_VERSION=true PUSH_TO_DOCKERHUB=false PUSH_TO_GHCR=false ./build.sh
 ```
 
 ---
@@ -90,8 +98,9 @@ The `build.sh` script supports the following configuration environment variables
 |---|---|---|
 | `TEST_VERSION` | `true` | When set to `true`, verifies container functionality and validates `/etc/os-release` after import. |
 | `PUSH_TO_DOCKERHUB` | `false` | When set to `true`, automatically pushes built images to Docker Hub (`runalsh/ubuntu-patch:<tag>`). |
-| `CLEANUP_DOCKER_IMAGES` | `false` | When set to `true`, deletes the local Docker image (`docker rmi`) after build and push to conserve disk space. |
-| `SKIP_EXISTS_CHECK` | `false` | When set to `false`, checks if the image tag already exists on Docker Hub and skips download/build if present. Set to `true` to force building all tags regardless of Docker Hub status. |
+| `PUSH_TO_GHCR` | `false` | When set to `true`, automatically pushes built images to GitHub Packages / GHCR (`ghcr.io/runalsh/ubuntu-patch:<tag>`). |
+| `CLEANUP_DOCKER_IMAGES` | `false` | When set to `true`, deletes local Docker images (`docker rmi`) after build and push to conserve disk space. |
+| `SKIP_EXISTS_CHECK` | `false` | When set to `false`, checks if the image tag already exists and skips download/build if present. Set to `true` to force building all tags regardless of remote registry status. |
 | `ENABLE_TRIVY_SCAN` | `false` | When set to `true` (or when `trivy` binary is present), generates SPDX SBOM reports (`trivy-reports/sbom-<tag>.json`) and logs vulnerabilities to stdout without failing the build pipeline (`--exit-code 0`). |
 
 ---
@@ -109,7 +118,7 @@ During build execution, images are scanned using [Trivy](https://github.com/aqua
 ```text
 .
 ├── .github/workflows/
-│   └── build-and-push.yml  # Automated CI pipeline for building, testing, scanning, and pushing to Docker Hub
+│   └── build-and-push.yml  # Automated CI pipeline for building, testing, scanning, and pushing to Docker Hub & GHCR
 ├── build.sh                 # Script for automatic import, Trivy scanning, and version verification
 ├── releases.txt             # Registry of URLs with rootfs versions
 └── README.md                # Project documentation
@@ -122,3 +131,4 @@ During build execution, images are scanned using [Trivy](https://github.com/aqua
 The CI workflow requires the following secrets in GitHub Secrets:
 - `DOCKERHUB_USERNAME`: Your Docker Hub username (`runalsh`)
 - `DOCKERHUB_TOKEN`: Docker Hub Personal Access Token
+- `${{ secrets.GITHUB_TOKEN }}`: Automatically provided by GitHub for GHCR publishing
