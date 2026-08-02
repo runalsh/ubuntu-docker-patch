@@ -8,6 +8,7 @@ import urllib.request
 
 MAJOR_TRACKS = ["22.04", "24.04", "26.04"]
 RELEASES_FILE = "releases.txt"
+README_FILE = "README.md"
 
 def load_existing_releases(releases_path):
     existing = set()
@@ -43,6 +44,32 @@ def inspect_os_release(tar_url):
                             return line.split("=", 1)[1].strip('"\'')
                 break
     return None
+
+def update_readme_table(tag, track):
+    if not os.path.exists(README_FILE):
+        return
+    with open(README_FILE, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    new_row = f"| `{tag}` | `{tag} LTS` | [`runalsh/ubuntu-patch:{tag}`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:{tag}`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |\n"
+
+    # Find where to insert the new row in README.md table
+    inserted = False
+    new_lines = []
+    
+    for i, line in enumerate(lines):
+        new_lines.append(line)
+        # Match previous version row in the same track e.g. | `24.04` or | `24.04.4`
+        if f"| `{track}" in line and "| [`runalsh/ubuntu-patch" in line and not inserted:
+            # Check if next line is not another tag in the same series
+            if i + 1 >= len(lines) or not lines[i + 1].startswith(f"| `{track}"):
+                new_lines.append(new_row)
+                inserted = True
+
+    if inserted:
+        with open(README_FILE, "w", encoding="utf-8") as f:
+            f.writelines(new_lines)
+        print(f"Updated {README_FILE} table with tag {tag}.")
 
 def main():
     existing_tags = load_existing_releases(RELEASES_FILE)
@@ -97,11 +124,13 @@ def main():
     for item in new_discoveries:
         print(f" - {item['tag']}: {item['url']}")
 
-    # Update releases.txt
+    # Update releases.txt and README.md
     with open(RELEASES_FILE, "a", encoding="utf-8") as f:
         for item in new_discoveries:
             f.write(f"{item['tag']} {item['url']}\n")
-    print(f"Updated {RELEASES_FILE}.")
+            update_readme_table(item['tag'], item['track'])
+
+    print(f"Updated {RELEASES_FILE} and {README_FILE}.")
 
     # Set GitHub Actions output environment variables
     first_new = new_discoveries[0]
