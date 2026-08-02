@@ -1,8 +1,8 @@
 22.04.0 https://cloud-images.ubuntu.com/releases/22.04/release-20220420/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
 22.04.1 https://cloud-images.ubuntu.com/releases/22.04/release-20220810/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
-22.04.2 https://cloud-images.ubuntu.com/releases/22.04/release-20230223/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
-22.04.3 https://cloud-images.ubuntu.com/releases/22.04/release-20230807/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
-22.04.4 https://cloud-images.ubuntu.com/releases/22.04/release-20240220/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
+22.04.2 https://cloud-images.ubuntu.com/releases/22.04/release-20230302/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
+22.04.3 https://cloud-images.ubuntu.com/releases/22.04/release-20230814/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
+22.04.4 https://cloud-images.ubuntu.com/releases/22.04/release-20240223/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
 22.04.5 https://cloud-images.ubuntu.com/releases/22.04/release-20240912/ubuntu-22.04-server-cloudimg-amd64-root.tar.xz
 24.04.0 https://cloud-images.ubuntu.com/releases/24.04/release-20240423/ubuntu-24.04-server-cloudimg-amd64-root.tar.xz
 24.04.1 https://cloud-images.ubuntu.com/releases/24.04/release-20240829/ubuntu-24.04-server-cloudimg-amd64-root.tar.xz
