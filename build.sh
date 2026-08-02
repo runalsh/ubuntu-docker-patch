@@ -26,21 +26,35 @@ while read -r tag url || [ -n "$tag" ]; do
     GHCR_IMAGE_NAME="ghcr.io/$(echo "${IMAGE_NAME}" | tr '[:upper:]' '[:lower:]')"
     FULL_GHCR_TAG="${GHCR_IMAGE_NAME}:${tag}"
 
-    DO_CHECK=true
-    if [ "${SKIP_EXISTS_CHECK:-false}" = "true" ] || [ "${CHECK_DOCKERHUB_EXISTS:-true}" = "false" ]; then
-        DO_CHECK=false
-    fi
+    NEEDS_DOCKERHUB_PUSH=false
+    NEEDS_GHCR_PUSH=false
 
-    if [ "${DO_CHECK}" = "true" ]; then
-        echo "Checking if ${FULL_IMAGE_TAG} or ${FULL_GHCR_TAG} already exists..."
-        if docker manifest inspect "${FULL_IMAGE_TAG}" &>/dev/null || docker manifest inspect "${FULL_GHCR_TAG}" &>/dev/null || curl -sfSL "https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/${tag}/" &>/dev/null; then
-            echo "Tag ${tag} already exists. Skipping download and build!"
-            echo
-            continue
-        fi
-        echo "Tag ${tag} not found. Proceeding with build..."
+    if [ "${SKIP_EXISTS_CHECK:-false}" = "true" ]; then
+        echo "SKIP_EXISTS_CHECK is true. Forcing build and push for ${tag}..."
+        [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ] && NEEDS_DOCKERHUB_PUSH=true
+        [ "${PUSH_TO_GHCR:-false}" = "true" ] && NEEDS_GHCR_PUSH=true
     else
-        echo "Existence check disabled. Forcing build and overwrite for ${tag}..."
+        if [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
+            if ! docker manifest inspect "${FULL_IMAGE_TAG}" &>/dev/null && ! curl -sfSL "https://hub.docker.com/v2/repositories/${IMAGE_NAME}/tags/${tag}/" &>/dev/null; then
+                echo "Tag ${FULL_IMAGE_TAG} missing on Docker Hub."
+                NEEDS_DOCKERHUB_PUSH=true
+            fi
+        fi
+
+        if [ "${PUSH_TO_GHCR:-false}" = "true" ]; then
+            if ! docker manifest inspect "${FULL_GHCR_TAG}" &>/dev/null; then
+                echo "Tag ${FULL_GHCR_TAG} missing on GHCR."
+                NEEDS_GHCR_PUSH=true
+            fi
+        fi
+
+        if [ "${NEEDS_DOCKERHUB_PUSH}" = "false" ] && [ "${NEEDS_GHCR_PUSH}" = "false" ]; then
+            if [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ] || [ "${PUSH_TO_GHCR:-false}" = "true" ]; then
+                echo "Tag ${tag} already exists on all enabled remote registries. Skipping download and build!"
+                echo
+                continue
+            fi
+        fi
     fi
 
     TAR_FILE="temp_rootfs_${tag}.tar.xz"
@@ -77,22 +91,22 @@ while read -r tag url || [ -n "$tag" ]; do
         echo "--------------------------------------------------------"
     fi
 
-    if [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
+    if [ "${NEEDS_DOCKERHUB_PUSH}" = "true" ] || [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
         echo "5. Pushing image to Docker Hub (${FULL_IMAGE_TAG})..."
-        docker push "${FULL_IMAGE_TAG}"
+        docker push "${FULL_IMAGE_TAG}" || true
     else
-        echo "5. Skipping Docker Hub push (PUSH_TO_DOCKERHUB is not set to 'true')."
+        echo "5. Skipping Docker Hub push."
     fi
 
-    if [ "${PUSH_TO_GHCR:-false}" = "true" ]; then
+    if [ "${NEEDS_GHCR_PUSH}" = "true" ] || [ "${PUSH_TO_GHCR:-false}" = "true" ]; then
         echo "6. Pushing image to GitHub Packages / GHCR (${FULL_GHCR_TAG})..."
         docker tag "${FULL_IMAGE_TAG}" "${FULL_GHCR_TAG}"
-        docker push "${FULL_GHCR_TAG}"
+        docker push "${FULL_GHCR_TAG}" || true
         if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
             docker rmi -f "${FULL_GHCR_TAG}" 2>/dev/null || true
         fi
     else
-        echo "6. Skipping GHCR push (PUSH_TO_GHCR is not set to 'true')."
+        echo "6. Skipping GHCR push."
     fi
 
     echo "7. Cleaning up local tarball..."
