@@ -32,30 +32,30 @@ This repository addresses the problem by:
 
 ### Ubuntu 22.04 LTS (Jammy Jellyfish)
 
-| Tag | OS Version | Docker Hub Image Link | GHCR Image Link |
+| Tag | OS Version | Docker Hub Image Link | GHCR Package Link |
 |---|---|---|---|
-| `22.04` | `22.04 LTS` | [`runalsh/ubuntu-patch:22.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `22.04.1` | `22.04.1 LTS` | [`runalsh/ubuntu-patch:22.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.1`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `22.04.2` | `22.04.2 LTS` | [`runalsh/ubuntu-patch:22.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.2`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `22.04.3` | `22.04.3 LTS` | [`runalsh/ubuntu-patch:22.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.3`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `22.04.4` | `22.04.4 LTS` | [`runalsh/ubuntu-patch:22.04.4`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.4`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `22.04.5` | `22.04.5 LTS` | [`runalsh/ubuntu-patch:22.04.5`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.5`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `22.04` | `22.04 LTS` | [`runalsh/ubuntu-patch:22.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04.1` | `22.04.1 LTS` | [`runalsh/ubuntu-patch:22.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.1`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04.2` | `22.04.2 LTS` | [`runalsh/ubuntu-patch:22.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.2`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04.3` | `22.04.3 LTS` | [`runalsh/ubuntu-patch:22.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.3`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04.4` | `22.04.4 LTS` | [`runalsh/ubuntu-patch:22.04.4`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.4`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `22.04.5` | `22.04.5 LTS` | [`runalsh/ubuntu-patch:22.04.5`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:22.04.5`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 
 ### Ubuntu 24.04 LTS (Noble Numbat)
 
-| Tag | OS Version | Docker Hub Image Link | GHCR Image Link |
+| Tag | OS Version | Docker Hub Image Link | GHCR Package Link |
 |---|---|---|---|
-| `24.04` | `24.04 LTS` | [`runalsh/ubuntu-patch:24.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `24.04.1` | `24.04.1 LTS` | [`runalsh/ubuntu-patch:24.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.1`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `24.04.2` | `24.04.2 LTS` | [`runalsh/ubuntu-patch:24.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.2`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `24.04.3` | `24.04.3 LTS` | [`runalsh/ubuntu-patch:24.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.3`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
-| `24.04.4` | `24.04.4 LTS` | [`runalsh/ubuntu-patch:24.04.4`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.4`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `24.04` | `24.04 LTS` | [`runalsh/ubuntu-patch:24.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `24.04.1` | `24.04.1 LTS` | [`runalsh/ubuntu-patch:24.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.1`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `24.04.2` | `24.04.2 LTS` | [`runalsh/ubuntu-patch:24.04.2`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.2`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `24.04.3` | `24.04.3 LTS` | [`runalsh/ubuntu-patch:24.04.3`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.3`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `24.04.4` | `24.04.4 LTS` | [`runalsh/ubuntu-patch:24.04.4`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:24.04.4`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 
 ### Ubuntu 26.04 LTS (Resilient Reptile)
 
-| Tag | OS Version | Docker Hub Image Link | GHCR Image Link |
+| Tag | OS Version | Docker Hub Image Link | GHCR Package Link |
 |---|---|---|---|
-| `26.04` | `26.04 LTS` | [`runalsh/ubuntu-patch:26.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04`](https://github.com/runalsh/ubuntu-docker-patch/pkgs/container/ubuntu-patch) |
+| `26.04` | `26.04 LTS` | [`runalsh/ubuntu-patch:26.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 
 ---
 
