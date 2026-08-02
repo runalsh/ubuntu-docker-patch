@@ -35,6 +35,12 @@ while read -r tag url || [ -n "$tag" ]; do
         echo "Tag ${tag} is the latest for major series ${MAJOR_VER}. Will also tag as major tag ${MAJOR_VER}!"
     fi
 
+    ZERO_ALIAS=""
+    if [[ "$tag" =~ ^[0-9]+\.[0-9]+$ ]]; then
+        ZERO_ALIAS="${tag}.0"
+        echo "Tag ${tag} is base release. Will also create alias tag ${ZERO_ALIAS}!"
+    fi
+
     NEEDS_DOCKERHUB_PUSH=false
     NEEDS_GHCR_PUSH=false
 
@@ -109,6 +115,12 @@ while read -r tag url || [ -n "$tag" ]; do
             docker tag "${FULL_IMAGE_TAG}" "${MAJOR_TAG}"
             docker push "${MAJOR_TAG}" || true
         fi
+        if [ -n "$ZERO_ALIAS" ]; then
+            ZERO_TAG="${IMAGE_NAME}:${ZERO_ALIAS}"
+            echo "Pushing .0 alias tag to Docker Hub (${ZERO_TAG})..."
+            docker tag "${FULL_IMAGE_TAG}" "${ZERO_TAG}"
+            docker push "${ZERO_TAG}" || true
+        fi
     else
         echo "5. Skipping Docker Hub push."
     fi
@@ -124,6 +136,15 @@ while read -r tag url || [ -n "$tag" ]; do
             docker push "${GHCR_MAJOR_TAG}" || true
             if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
                 docker rmi -f "${GHCR_MAJOR_TAG}" 2>/dev/null || true
+            fi
+        fi
+        if [ -n "$ZERO_ALIAS" ]; then
+            GHCR_ZERO_TAG="${GHCR_IMAGE_NAME}:${ZERO_ALIAS}"
+            echo "Pushing .0 alias tag to GHCR (${GHCR_ZERO_TAG})..."
+            docker tag "${FULL_IMAGE_TAG}" "${GHCR_ZERO_TAG}"
+            docker push "${GHCR_ZERO_TAG}" || true
+            if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
+                docker rmi -f "${GHCR_ZERO_TAG}" 2>/dev/null || true
             fi
         fi
         if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
