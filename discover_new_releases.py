@@ -23,26 +23,26 @@ def load_existing_releases(releases_path):
                     existing.add(parts[0])
     return existing
 
-def inspect_os_release(tar_url):
-    req = urllib.request.Request(tar_url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req) as resp:
-        tf = tarfile.open(fileobj=resp, mode="r|xz")
-        for member in tf:
-            # Check for regular os-release file (usr/lib/os-release or etc/os-release)
-            if (member.name.endswith("usr/lib/os-release") or member.name.endswith("etc/os-release")) and member.isfile():
-                f = tf.extractfile(member)
-                if f:
-                    content = f.read().decode("utf-8")
-                    for line in content.splitlines():
-                        if line.startswith("VERSION="):
-                            v_str = line.split("=", 1)[1].strip('"\'')
-                            m = re.search(r"(\d+\.\d+(?:\.\d+)?)", v_str)
-                            if m:
-                                return m.group(1)
-                    for line in content.splitlines():
-                        if line.startswith("VERSION_ID="):
-                            return line.split("=", 1)[1].strip('"\'')
-                break
+def inspect_os_release(manifest_url, track):
+    req = urllib.request.Request(manifest_url, headers={"User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            content = resp.read().decode("utf-8")
+            for line in content.splitlines():
+                if line.startswith("base-files\t") or line.startswith("base-files "):
+                    ver = line.split()[1]
+                    m = re.search(r"ubuntu\d+(?:\.(\d+))?", ver)
+                    if m:
+                        sub = m.group(1)
+                        if not sub:
+                            return f"{track}.0"
+                        if track == "22.04":
+                            mapping = {"2": "1", "3": "2", "4": "3", "6": "4", "7": "5"}
+                            minor = mapping.get(sub, sub)
+                            return f"{track}.{minor}"
+                        return f"{track}.{sub}"
+    except Exception:
+        pass
     return None
 
 def update_readme_table(tag, track):
@@ -92,9 +92,10 @@ def main():
 
         for folder in reversed(folders):
             tar_url = f"https://cloud-images.ubuntu.com/releases/{track}/{folder}/ubuntu-{track}-server-cloudimg-amd64-root.tar.xz"
+            manifest_url = f"https://cloud-images.ubuntu.com/releases/{track}/{folder}/ubuntu-{track}-server-cloudimg-amd64-root.manifest"
             try:
                 print(f"Checking {folder}...")
-                tag = inspect_os_release(tar_url)
+                tag = inspect_os_release(manifest_url, track)
                 if not tag:
                     continue
 

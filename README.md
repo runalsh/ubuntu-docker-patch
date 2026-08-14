@@ -59,6 +59,7 @@ This repository addresses the problem by:
 |---|---|---|---|
 | `26.04` | `Latest 26.04 LTS` | [`runalsh/ubuntu-patch:26.04`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 | `26.04.0` | `26.04.0 LTS` | [`runalsh/ubuntu-patch:26.04.0`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04.0`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
+| `26.04.1` | `26.04.1 LTS` | [`runalsh/ubuntu-patch:26.04.1`](https://hub.docker.com/r/runalsh/ubuntu-patch/tags) | [`ghcr.io/runalsh/ubuntu-patch:26.04.1`](https://github.com/users/runalsh/packages/container/package/ubuntu-patch) |
 
 ---
 
