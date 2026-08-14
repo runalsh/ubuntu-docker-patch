@@ -13,4 +13,3 @@
 24.04.4 https://cloud-images.ubuntu.com/releases/24.04/release-20260209/ubuntu-24.04-server-cloudimg-amd64-root.tar.xz
 26.04 https://cloud-images.ubuntu.com/releases/26.04/release-20260421/ubuntu-26.04-server-cloudimg-amd64-root.tar.xz
 26.04.0 https://cloud-images.ubuntu.com/releases/26.04/release-20260421/ubuntu-26.04-server-cloudimg-amd64-root.tar.xz
-26.04.1 https://cloud-images.ubuntu.com/releases/26.04/release-20260731/ubuntu-26.04-server-cloudimg-amd64-root.tar.xz

@@ -23,24 +23,30 @@ def load_existing_releases(releases_path):
                     existing.add(parts[0])
     return existing
 
-def inspect_os_release(manifest_url, track):
-    req = urllib.request.Request(manifest_url, headers={"User-Agent": "Mozilla/5.0"})
+def inspect_os_release(tar_url):
+    req = urllib.request.Request(tar_url, headers={"User-Agent": "Mozilla/5.0"})
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
-            content = resp.read().decode("utf-8")
-            for line in content.splitlines():
-                if line.startswith("base-files\t") or line.startswith("base-files "):
-                    ver = line.split()[1]
-                    m = re.search(r"ubuntu\d+(?:\.(\d+))?", ver)
-                    if m:
-                        sub = m.group(1)
-                        if not sub:
-                            return f"{track}.0"
-                        if track == "22.04":
-                            mapping = {"2": "1", "3": "2", "4": "3", "6": "4", "7": "5"}
-                            minor = mapping.get(sub, sub)
-                            return f"{track}.{minor}"
-                        return f"{track}.{sub}"
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            tf = tarfile.open(fileobj=resp, mode="r|xz")
+            for member in tf:
+                if member.isfile() and member.name.endswith("usr/lib/os-release"):
+                    f = tf.extractfile(member)
+                    if f:
+                        content = f.read().decode("utf-8")
+                        v_id = None
+                        v_str = None
+                        for line in content.splitlines():
+                            if line.startswith("VERSION_ID="):
+                                v_id = line.split("=", 1)[1].strip('"\'')
+                            elif line.startswith("VERSION="):
+                                v_str = line.split("=", 1)[1].strip('"\'')
+                        if v_id:
+                            return v_id
+                        if v_str:
+                            m = re.search(r"(\d+\.\d+(?:\.\d+)?)", v_str)
+                            if m:
+                                return m.group(1)
+                    break
     except Exception:
         pass
     return None
@@ -92,10 +98,9 @@ def main():
 
         for folder in reversed(folders):
             tar_url = f"https://cloud-images.ubuntu.com/releases/{track}/{folder}/ubuntu-{track}-server-cloudimg-amd64-root.tar.xz"
-            manifest_url = f"https://cloud-images.ubuntu.com/releases/{track}/{folder}/ubuntu-{track}-server-cloudimg-amd64-root.manifest"
             try:
                 print(f"Checking {folder}...")
-                tag = inspect_os_release(manifest_url, track)
+                tag = inspect_os_release(tar_url)
                 if not tag:
                     continue
 
