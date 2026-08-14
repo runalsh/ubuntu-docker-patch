@@ -3,6 +3,7 @@ set -euo pipefail
 
 IMAGE_NAME="runalsh/ubuntu-patch"
 RELEASES_FILE="releases.txt"
+MISMATCHED_TAGS=()
 
 if [ ! -f "$RELEASES_FILE" ]; then
     echo "Error: $RELEASES_FILE not found!"
@@ -88,11 +89,20 @@ while read -r tag url || [ -n "$tag" ]; do
         # Normalize tag if ending in .0 (e.g. 22.04.0 -> 22.04)
         EXPECTED_VER="${tag%.0}"
 
+        IS_MISMATCH=false
         if echo "$OS_RELEASE" | grep -q "${EXPECTED_VER}"; then
             echo "SUCCESS: Version match found for ${EXPECTED_VER} in /etc/os-release!"
         else
             echo "ERROR: Version mismatch! Expected ${EXPECTED_VER} in /etc/os-release"
-            exit 1
+            MISMATCHED_TAGS+=("${tag} (expected ${EXPECTED_VER})")
+            IS_MISMATCH=true
+        fi
+
+        if [ "$IS_MISMATCH" = "true" ]; then
+            echo "Skipping push for mismatched tag ${tag}."
+            rm -f "${TAR_FILE}"
+            echo
+            continue
         fi
     else
         echo "3. Skipping version verification (TEST_VERSION is false)."
@@ -164,4 +174,15 @@ while read -r tag url || [ -n "$tag" ]; do
     echo
 done < "$RELEASES_FILE"
 
-echo "All images processed successfully!"
+if [ ${#MISMATCHED_TAGS[@]} -gt 0 ]; then
+    echo "=========================================="
+    echo "SUMMARY: Version mismatches detected!"
+    echo "The following tags failed verification:"
+    for m in "${MISMATCHED_TAGS[@]}"; do
+        echo "  - ${m}"
+    done
+    echo "=========================================="
+    exit 1
+else
+    echo "All images processed and verified successfully!"
+fi
