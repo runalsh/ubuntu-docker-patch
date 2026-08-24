@@ -73,16 +73,36 @@ while read -r tag url || [ -n "$tag" ]; do
         fi
     fi
 
-    TAR_FILE="temp_rootfs_${tag}.tar.xz"
+    TAR_FILE="/tmp/temp_rootfs_${tag}.tar.xz"
+    EXTRACT_DIR="/tmp/ubuntu_rootfs_${tag}"
+    rm -rf "${EXTRACT_DIR}" "${TAR_FILE}"
+    mkdir -p "${EXTRACT_DIR}"
 
     echo "1. Downloading rootfs..."
-    curl -fSL -o "${TAR_FILE}" "${url}"
+    curl -fSL -sS --show-error -o "${TAR_FILE}" "${url}"
 
-    echo "2. Importing rootfs into Docker as ${FULL_IMAGE_TAG}..."
-    docker import "${TAR_FILE}" "${FULL_IMAGE_TAG}"
+    echo "2. Extracting and optimizing rootfs (purging snapd, apt caches, docs, man pages)..."
+    tar -xf "${TAR_FILE}" -C "${EXTRACT_DIR}"
+
+    # Purge snapd, lxd, and snap namespaces (~280 MB savings)
+    rm -rf "${EXTRACT_DIR}"/var/lib/snapd "${EXTRACT_DIR}"/usr/lib/snapd "${EXTRACT_DIR}"/var/snap "${EXTRACT_DIR}"/snap "${EXTRACT_DIR}"/var/lib/lxd
+
+    # Purge APT cache & index lists (will be re-created on apt-get update)
+    rm -rf "${EXTRACT_DIR}"/var/cache/apt/* "${EXTRACT_DIR}"/var/lib/apt/lists/*
+
+    # Purge documentation and man pages
+    rm -rf "${EXTRACT_DIR}"/usr/share/doc/* "${EXTRACT_DIR}"/usr/share/man/* "${EXTRACT_DIR}"/usr/share/info/*
+
+    # Purge temporary files and logs
+    rm -rf "${EXTRACT_DIR}"/tmp/* "${EXTRACT_DIR}"/var/log/* "${EXTRACT_DIR}"/var/tmp/*
+
+    echo "3. Importing optimized rootfs into Docker as ${FULL_IMAGE_TAG}..."
+    tar -C "${EXTRACT_DIR}" -c . | docker import       -c 'ENV LANG=C.UTF-8'       -c 'CMD ["/bin/bash"]'       - "${FULL_IMAGE_TAG}"
+
+    rm -rf "${EXTRACT_DIR}" "${TAR_FILE}"
 
     if [ "${TEST_VERSION:-true}" = "true" ]; then
-        echo "3. Verifying container functionality and /etc/os-release version..."
+        echo "4. Verifying container functionality and /etc/os-release version..."
         OS_RELEASE=$(docker run --rm "${FULL_IMAGE_TAG}" cat /etc/os-release)
         echo "$OS_RELEASE"
 
@@ -109,13 +129,13 @@ while read -r tag url || [ -n "$tag" ]; do
     fi
 
     if command -v trivy &>/dev/null || [ "${ENABLE_TRIVY_SCAN:-false}" = "true" ]; then
-        echo "4. Generating Trivy SBOM and vulnerability files (silent console)..."
+        echo "5. Generating Trivy SBOM and vulnerability files (silent console)..."
         trivy image --format spdx-json --output "trivy-reports/sbom-${tag}.json" "${FULL_IMAGE_TAG}" 2>/dev/null || true
         trivy image --format json --output "trivy-reports/vulnerabilities-${tag}.json" "${FULL_IMAGE_TAG}" 2>/dev/null || true
     fi
 
     if [ "${NEEDS_DOCKERHUB_PUSH}" = "true" ] || [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
-        echo "5. Pushing image to Docker Hub (${FULL_IMAGE_TAG})..."
+        echo "6. Pushing image to Docker Hub (${FULL_IMAGE_TAG})..."
         docker push "${FULL_IMAGE_TAG}" || true
         if [ "$IS_LATEST_MAJOR" = "true" ]; then
             MAJOR_TAG="${IMAGE_NAME}:${MAJOR_VER}"
@@ -134,7 +154,7 @@ while read -r tag url || [ -n "$tag" ]; do
     fi
 
     if [ "${NEEDS_GHCR_PUSH}" = "true" ] || [ "${PUSH_TO_GHCR:-false}" = "true" ]; then
-        echo "6. Pushing image to GitHub Packages / GHCR (${FULL_GHCR_TAG})..."
+        echo "7. Pushing image to GitHub Packages / GHCR (${FULL_GHCR_TAG})..."
         docker tag "${FULL_IMAGE_TAG}" "${FULL_GHCR_TAG}"
         docker push "${FULL_GHCR_TAG}" || true
         if [ "$IS_LATEST_MAJOR" = "true" ]; then
@@ -142,7 +162,7 @@ while read -r tag url || [ -n "$tag" ]; do
             echo "Pushing major alias tag to GHCR (${GHCR_MAJOR_TAG})..."
             docker tag "${FULL_IMAGE_TAG}" "${GHCR_MAJOR_TAG}"
             docker push "${GHCR_MAJOR_TAG}" || true
-            if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
+            if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
                 docker rmi -f "${GHCR_MAJOR_TAG}" 2>/dev/null || true
             fi
         fi
@@ -151,21 +171,21 @@ while read -r tag url || [ -n "$tag" ]; do
             echo "Pushing .0 alias tag to GHCR (${GHCR_ZERO_TAG})..."
             docker tag "${FULL_IMAGE_TAG}" "${GHCR_ZERO_TAG}"
             docker push "${GHCR_ZERO_TAG}" || true
-            if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
+            if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
                 docker rmi -f "${GHCR_ZERO_TAG}" 2>/dev/null || true
             fi
         fi
-        if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
+        if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
             docker rmi -f "${FULL_GHCR_TAG}" 2>/dev/null || true
         fi
     else
         echo "6. Skipping GHCR push."
     fi
 
-    echo "7. Cleaning up local tarball..."
+    echo "8. Cleaning up local tarball..."
     rm -f "${TAR_FILE}"
 
-    if [ "${CLEANUP_DOCKER_IMAGES:-false}" = "true" ]; then
+    if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
         echo "Removing local Docker image ${FULL_IMAGE_TAG} to save disk space..."
         docker rmi -f "${FULL_IMAGE_TAG}" 2>/dev/null || true
     fi
