@@ -3,6 +3,9 @@ set -euo pipefail
 
 # Pre-cleanup temporary files from previous runs
 rm -rf /tmp/ubuntu-patch_* temp_rootfs_*
+if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
+    docker images --format '{{.Repository}}:{{.Tag}}' | grep -E '^((ghcr\.io/)?runalsh/ubuntu-patch)(:|$)' | xargs -r docker rmi -f 2>/dev/null || true
+fi
 
 IMAGE_NAME="runalsh/ubuntu-patch"
 RELEASES_FILE="releases.txt"
@@ -215,4 +218,9 @@ if [ ${#MISMATCHED_TAGS[@]} -gt 0 ]; then
     exit 1
 else
     echo "All images processed and verified successfully!"
+fi
+
+if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
+    echo "Performing final Docker cleanup of all ubuntu-patch images..."
+    docker images --format '{{.Repository}}:{{.Tag}}' | grep -E '^((ghcr\.io/)?runalsh/ubuntu-patch)(:|$)' | xargs -r docker rmi -f 2>/dev/null || true
 fi
