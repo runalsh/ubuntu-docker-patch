@@ -10,7 +10,6 @@ if [ ! -f "$RELEASES_FILE" ]; then
     exit 1
 fi
 
-mkdir -p trivy-reports
 
 echo "Starting process for image repository: ${IMAGE_NAME}"
 
@@ -75,6 +74,18 @@ while read -r tag url || [ -n "$tag" ]; do
 
     TAR_FILE="/tmp/temp_rootfs_${tag}.tar.xz"
     EXTRACT_DIR="/tmp/ubuntu_rootfs_${tag}"
+    CREATED_TAGS=("${FULL_IMAGE_TAG}")
+
+    cleanup_iteration() {
+        rm -rf "${EXTRACT_DIR:-}" "${TAR_FILE:-}"
+        if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ] && [ ${#CREATED_TAGS[@]} -gt 0 ]; then
+            for img_tag in "${CREATED_TAGS[@]}"; do
+                docker rmi -f "${img_tag}" 2>/dev/null || true
+            done
+        fi
+    }
+    trap cleanup_iteration EXIT INT TERM HUP
+
     rm -rf "${EXTRACT_DIR}" "${TAR_FILE}"
     mkdir -p "${EXTRACT_DIR}"
 
@@ -128,25 +139,22 @@ while read -r tag url || [ -n "$tag" ]; do
         echo "3. Skipping version verification (TEST_VERSION is false)."
     fi
 
-    if command -v trivy &>/dev/null || [ "${ENABLE_TRIVY_SCAN:-false}" = "true" ]; then
-        echo "5. Generating Trivy SBOM and vulnerability files (silent console)..."
-        trivy image --format spdx-json --output "trivy-reports/sbom-${tag}.json" "${FULL_IMAGE_TAG}" 2>/dev/null || true
-        trivy image --format json --output "trivy-reports/vulnerabilities-${tag}.json" "${FULL_IMAGE_TAG}" 2>/dev/null || true
-    fi
 
     if [ "${NEEDS_DOCKERHUB_PUSH}" = "true" ] || [ "${PUSH_TO_DOCKERHUB:-false}" = "true" ]; then
-        echo "6. Pushing image to Docker Hub (${FULL_IMAGE_TAG})..."
+        echo "4. Pushing image to Docker Hub (${FULL_IMAGE_TAG})..."
         docker push "${FULL_IMAGE_TAG}" || true
         if [ "$IS_LATEST_MAJOR" = "true" ]; then
             MAJOR_TAG="${IMAGE_NAME}:${MAJOR_VER}"
             echo "Pushing major alias tag to Docker Hub (${MAJOR_TAG})..."
             docker tag "${FULL_IMAGE_TAG}" "${MAJOR_TAG}"
+            CREATED_TAGS+=("${MAJOR_TAG}")
             docker push "${MAJOR_TAG}" || true
         fi
         if [ -n "$ZERO_ALIAS" ]; then
             ZERO_TAG="${IMAGE_NAME}:${ZERO_ALIAS}"
             echo "Pushing .0 alias tag to Docker Hub (${ZERO_TAG})..."
             docker tag "${FULL_IMAGE_TAG}" "${ZERO_TAG}"
+            CREATED_TAGS+=("${ZERO_TAG}")
             docker push "${ZERO_TAG}" || true
         fi
     else
@@ -154,13 +162,15 @@ while read -r tag url || [ -n "$tag" ]; do
     fi
 
     if [ "${NEEDS_GHCR_PUSH}" = "true" ] || [ "${PUSH_TO_GHCR:-false}" = "true" ]; then
-        echo "7. Pushing image to GitHub Packages / GHCR (${FULL_GHCR_TAG})..."
+        echo "5. Pushing image to GitHub Packages / GHCR (${FULL_GHCR_TAG})..."
         docker tag "${FULL_IMAGE_TAG}" "${FULL_GHCR_TAG}"
+        CREATED_TAGS+=("${FULL_GHCR_TAG}")
         docker push "${FULL_GHCR_TAG}" || true
         if [ "$IS_LATEST_MAJOR" = "true" ]; then
             GHCR_MAJOR_TAG="${GHCR_IMAGE_NAME}:${MAJOR_VER}"
             echo "Pushing major alias tag to GHCR (${GHCR_MAJOR_TAG})..."
             docker tag "${FULL_IMAGE_TAG}" "${GHCR_MAJOR_TAG}"
+            CREATED_TAGS+=("${GHCR_MAJOR_TAG}")
             docker push "${GHCR_MAJOR_TAG}" || true
             if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
                 docker rmi -f "${GHCR_MAJOR_TAG}" 2>/dev/null || true
@@ -170,6 +180,7 @@ while read -r tag url || [ -n "$tag" ]; do
             GHCR_ZERO_TAG="${GHCR_IMAGE_NAME}:${ZERO_ALIAS}"
             echo "Pushing .0 alias tag to GHCR (${GHCR_ZERO_TAG})..."
             docker tag "${FULL_IMAGE_TAG}" "${GHCR_ZERO_TAG}"
+            CREATED_TAGS+=("${GHCR_ZERO_TAG}")
             docker push "${GHCR_ZERO_TAG}" || true
             if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
                 docker rmi -f "${GHCR_ZERO_TAG}" 2>/dev/null || true
@@ -182,13 +193,9 @@ while read -r tag url || [ -n "$tag" ]; do
         echo "6. Skipping GHCR push."
     fi
 
-    echo "8. Cleaning up local tarball..."
-    rm -f "${TAR_FILE}"
-
-    if [ "${CLEANUP_DOCKER_IMAGES:-true}" = "true" ]; then
-        echo "Removing local Docker image ${FULL_IMAGE_TAG} to save disk space..."
-        docker rmi -f "${FULL_IMAGE_TAG}" 2>/dev/null || true
-    fi
+    echo "6. Cleaning up iteration artifacts and pruning all local Docker tags..."
+    cleanup_iteration
+    CREATED_TAGS=()
 
     echo "Successfully completed processing for tag ${tag}!"
     echo
