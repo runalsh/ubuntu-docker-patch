@@ -88,4 +88,4 @@ jobs:
       - name: Cleanup Temporary Files
         if: always()
         run: |
-          sudo rm -rf /tmp/temp_rootfs_* /tmp/ubuntu_rootfs_* temp_rootfs_* 2>/dev/null || true
+          sudo rm -rf /tmp/ubuntu-patch_* temp_rootfs_* 2>/dev/null || true

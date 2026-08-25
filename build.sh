@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# Pre-cleanup temporary files from previous runs
+rm -rf /tmp/ubuntu-patch_* temp_rootfs_*
+
 IMAGE_NAME="runalsh/ubuntu-patch"
 RELEASES_FILE="releases.txt"
 MISMATCHED_TAGS=()
@@ -72,8 +75,8 @@ while read -r tag url || [ -n "$tag" ]; do
         fi
     fi
 
-    TAR_FILE="/tmp/temp_rootfs_${tag}.tar.xz"
-    EXTRACT_DIR="/tmp/ubuntu_rootfs_${tag}"
+    TAR_FILE="/tmp/ubuntu-patch_archive_${tag}.tar.xz"
+    EXTRACT_DIR="/tmp/ubuntu-patch_rootfs_${tag}"
     CREATED_TAGS=("${FULL_IMAGE_TAG}")
 
     cleanup_iteration() {
