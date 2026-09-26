@@ -40,12 +40,12 @@ def inspect_os_release(tar_url):
                                 v_id = line.split("=", 1)[1].strip('"\'')
                             elif line.startswith("VERSION="):
                                 v_str = line.split("=", 1)[1].strip('"\'')
-                        if v_id:
-                            return v_id
                         if v_str:
                             m = re.search(r"(\d+\.\d+(?:\.\d+)?)", v_str)
                             if m:
                                 return m.group(1)
+                        if v_id:
+                            return v_id
                     break
     except Exception:
         pass
@@ -96,6 +96,7 @@ def main():
 
         print(f"Found {len(folders)} dated release folders for {track}.")
 
+        discovered_in_track = set()
         for folder in reversed(folders):
             tar_url = f"https://cloud-images.ubuntu.com/releases/{track}/{folder}/ubuntu-{track}-server-cloudimg-amd64-root.tar.xz"
             try:
@@ -108,6 +109,9 @@ def main():
                     print(f"Tag {tag} already present in releases.txt. Track {track} up to date!")
                     break
 
+                if tag in discovered_in_track:
+                    continue
+
                 print(f"✨ NEW RELEASE DISCOVERED! Tag: {tag} -> {tar_url}")
                 new_discoveries.append({
                     "tag": tag,
@@ -115,7 +119,7 @@ def main():
                     "track": track,
                     "folder": folder
                 })
-                existing_tags.add(tag)
+                discovered_in_track.add(tag)
             except Exception as e:
                 print(f"Error checking {tar_url}: {e}")
 
